@@ -1,4 +1,5 @@
-<?php   
+<?php
+    ini_set('max_execution_time', 3000);
     // Defining the basic cURL function
     function curl($url) {
         // Assigning cURL options to an array
