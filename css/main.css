@@ -3,5 +3,13 @@
 }
 
 .catalogueEntry{
-	border: 2px solid black;
+	/*border: 2px solid black;*/
+}
+
+.cataItemSpec{
+	font-size: 0.85em;
+}
+
+.cataItemName{
+	font-size: 1.1em;
 }

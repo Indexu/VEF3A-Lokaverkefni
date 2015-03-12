@@ -23,10 +23,12 @@ foreach ($separate_results as $separate_result) {
     	if(trim($name) != ""){
 
     		$specs = [
+    			"url" => "";
 				"name" => "",
 				"manufacturer" => "",
 				"os" => "",
 				"cpu" => [
+					"type" => "",
 					"family" => "",
 					"id" => "",
 					"cores" => "",
@@ -100,7 +102,12 @@ foreach ($separate_results as $separate_result) {
         	$newUrl = "http://www.elko.is" . scrape_between($newItem, "href=\"", "\">");
 
         	// Laptop name
-        	$specs["name"] = $name;
+        	$shorterName = explode("tölva", $name);
+
+        	$name = str_replace("far","",$shorterName[0]);
+
+        	$specs["name"] = trim($name);
+        	$specs["url"] = $newUrl;
 
         	// cURL it
         	$itemPage = curl($newUrl);
@@ -135,15 +142,48 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Örgjörvi':
-		    			$specs["cpu"]["family"] = $elkoSpecs["key"][$i];
+		    			$cpuSpecs = explode(" ", $elkoSpecs["key"][$i]);
+		    			if($cpuSpecs[0] == "Intel"){
+		    				$specs["cpu"]["type"] = $cpuSpecs[0];
+
+		    				if(strpos($elkoSpecs["key"][$i], 'Core') !== FALSE){
+		    					$specs["cpu"]["family"] = $cpuSpecs[2];
+		    				}
+		    				else{
+		    					$specs["cpu"]["family"] = $cpuSpecs[1];
+		    				}
+		    			}
+		    			else if($cpuSpecs[0] == "AMD"){
+		    				$specs["cpu"]["type"] = $cpuSpecs[0];
+		    			}
+		    			else{
+		    				$specs["cpu"]["family"] = $elkoSpecs["key"][$i];
+		    			}
+		    			
 		    			break;
 
 		    		case 'Númer örgjörva':
-		    			$specs["cpu"]["id"] = $elkoSpecs["key"][$i];
+		    			if($specs["cpu"]["type"] == "AMD"){
+		    				$cpuSpecs = explode("-", $elkoSpecs["key"][$i]);
+
+		    				$specs["cpu"]["family"] = $cpuSpecs[0];
+		    				$specs["cpu"]["id"] = $cpuSpecs[1];
+		    			}
+		    			else{
+		    				$specs["cpu"]["id"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Fjöldi kjarna (Core)':
-		    			$specs["cpu"]["cores"] = $elkoSpecs["key"][$i];
+		    			if(strpos($elkoSpecs["key"][$i], 'Dual') !== FALSE){
+		    				$specs["cpu"]["cores"] = "2";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'Quad') !== FALSE){
+		    				$specs["cpu"]["cores"] = "4";
+		    			}
+		    			else{
+		    				$specs["cpu"]["cores"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Hraði örgjörva (GHz)':
@@ -167,11 +207,20 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Hraði vinnsluminnis (MHz)':
-		    			$specs["ram"]["clockspeed"] = $elkoSpecs["key"][$i];
+		    			$clockspeed = str_replace(" ","",$elkoSpecs["key"][$i]);
+
+		    			$specs["ram"]["clockspeed"] = $clockspeed;
 		    			break;
 
 		    		case 'Harður diskur (GB)':
-		    			$specs["storage"]["size"] = $elkoSpecs["key"][$i];
+		    			$gb = explode(" ", $elkoSpecs["key"][$i]);
+
+		    			/*$gb = str_replace("GB","",$elkoSpecs["key"][$i]);
+		    			$gb = str_replace("SSD","",$gb);
+		    			$gb = str_replace("SSHD","",$gb);
+		    			$gb = str_replace("Flash","",$gb);*/
+
+		    			$specs["storage"]["size"] = trim($gb[0]);
 		    			break;
 
 		    		case 'Gerð harðadisks':
@@ -183,6 +232,10 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Solid State Drive (SSD)':
+		    			if($elkoSpecs["key"][$i] == "Já"){
+		    				$specs["storage"]["type"] = "SSD";
+		    			}
+
 		    			$specs["storage"]["ssd"] = $elkoSpecs["key"][$i];
 		    			break;
 

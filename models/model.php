@@ -9,7 +9,7 @@ class Model {
 		$this->title = "Ókeypis";
 		
 		try{
-			$json = file_get_contents('data/elko.json');
+			$json = file_get_contents('data/elko2.json');
 			$this->items = json_decode($json, true);
 		} catch(Exception $e){
 			 die('Caught exception: '.  $e->getMessage(). "\n");

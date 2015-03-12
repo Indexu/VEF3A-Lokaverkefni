@@ -37,6 +37,8 @@ if (isset($_GET)){
 		</div>
 	</div>
 
+		
+
 	<div id="wrapper" class="row">
 		<div class="large-12 columns">
 			<?php
@@ -47,6 +49,7 @@ if (isset($_GET)){
 
 	<script src="js/vendor/jquery.js"></script>
     <script src="js/foundation.min.js"></script>
+    <script src="js/main.js"></script>
 
 </body>
 
