@@ -23,8 +23,9 @@ foreach ($separate_results as $separate_result) {
     	if(trim($name) != ""){
 
     		$specs = [
-    			"url" => "";
+    			"url" => "",
 				"name" => "",
+				"price" => "",
 				"manufacturer" => "",
 				"os" => "",
 				"cpu" => [
@@ -46,7 +47,7 @@ foreach ($separate_results as $separate_result) {
 					"type" => "",
 					"rpm" => "",
 					"ssd" => "",
-					"ssd-size" => ""
+					"ssd_size" => ""
 				],
 				"soundgraphic" => [
 					"soundcard" => "",
@@ -59,21 +60,20 @@ foreach ($separate_results as $separate_result) {
 					"resolution" => "",
 					"touchscreen" => "",
 					"webcam" => "",
-					"webcam-resolution" => ""
+					"webcam_resolution" => ""
 				],
 				"io" => [
-					"network-adapter" => "",
-					"wireless-adapter" => "",
+					"network_adapter" => "",
+					"wireless_adapter" => "",
 					"hdmi" => "",
 					"vga" => "",
 					"dvi" => "",
 					"usb2" => "",
 					"usb3" => "",
 					"bluetooth" => "",
-					"bluetooth-version" => "",
 					"thunderbolt" => "",
-					"mini-displayport" => "",
-					"headphone-mic" => ""
+					"mini_displayport" => "",
+					"headphone_mic" => ""
 				],
 				"battery" => [
 					"type" => "",
@@ -81,11 +81,11 @@ foreach ($separate_results as $separate_result) {
 					"duration" => ""
 				],
 				"other" => [
-					"cd-drive" => "",
-					"cd-drive-type" => "",
-					"card-reader" => "",
+					"cd_drive" => "",
+					"cd_drive-type" => "",
+					"card_reader" => "",
 					"keyboard" => "",
-					"icelandic-letters" => "",
+					"icelandic_letters" => "",
 					"software" => "",
 					"other" => ""
 				],
@@ -111,10 +111,15 @@ foreach ($separate_results as $separate_result) {
 
         	// cURL it
         	$itemPage = curl($newUrl);
+        	// Get price
+        	$itemPrice = scrape_between($itemPage, "itemprop=\"original-price\">", "</span>");
+        	$itemPrice = str_replace("kr", "", $itemPrice);
+        	$itemPrice = str_replace(".", "", $itemPrice);
+        	$specs["price"] = intval(trim($itemPrice));
         	// Get area of scraping
         	$itemSpecs = scrape_between($itemPage, "<div id=\"specs\" class=\"tab-pane\">", "<div id=\"customer-overview\"");
         	// Explode area
-        	$separate_specs = explode("<tr class=\"product_property\">", $itemPage);
+        	$separate_specs = explode("<tr class=\"product_property\">", $itemSpecs);
 
         	// Specs array
         	$elkoSpecs = [
@@ -240,7 +245,7 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'SSD (GB)':
-		    			$specs["storage"]["ssd-size"] = $elkoSpecs["key"][$i];
+		    			$specs["storage"]["ssd_size"] = $elkoSpecs["key"][$i];
 		    			break;
 
 		    		case 'Hljóðkort':
@@ -256,11 +261,35 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Skjágerð':
-		    			$specs["screen"]["type"] = $elkoSpecs["key"][$i];
+		    			if(strpos($elkoSpecs["key"][$i], 'Retina') !== FALSE){
+		    				$specs["screen"]["type"] = "Retina";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'TN') !== FALSE){
+		    				$specs["screen"]["type"] = "TN";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'IPS') !== FALSE){
+		    				$specs["screen"]["type"] = "IPS";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'VA') !== FALSE){
+		    				$specs["screen"]["type"] = "VA";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'Super AMOLED') !== FALSE){
+		    				$specs["screen"]["type"] = "Super AMOLED";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'AMOLED') !== FALSE){
+		    				$specs["screen"]["type"] = "AMOLED";
+		    			}
+		    			else{
+		    				$specs["screen"]["type"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Skjástærð':
-		    			$specs["screen"]["size"] = $elkoSpecs["key"][$i];
+		    			$inches = str_replace("'","",$elkoSpecs["key"][$i]);
+		    			$inches = str_replace("\"","",$inches);
+		    			$inches = str_replace(",",".",$inches);
+
+		    			$specs["screen"]["size"] = $inches;
 		    			break;
 
 		    		case 'Upplausn':
@@ -272,31 +301,71 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Vefmyndavél':
-		    			$specs["screen"]["webcam"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["screen"]["webcam"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["screen"]["webcam"] = 0;
+		    			}
+		    			else{
+		    				$specs["screen"]["webcam"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Vefmyndavél - upplausn':
-		    			$specs["screen"]["webcam-resolution"] = $elkoSpecs["key"][$i];
+		    			$specs["screen"]["webcam_resolution"] = $elkoSpecs["key"][$i];
 		    			break;
 
 		    		case 'Gerð netkorts':
-		    			$specs["io"]["network-adapter"] = $elkoSpecs["key"][$i];
+		    			$specs["io"]["network_adapter"] = $elkoSpecs["key"][$i];
 		    			break;
 
 		    		case 'Þráðlaust netkort':
-		    			$specs["io"]["wireless-adapter"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["wireless_adapter"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["wireless_adapter"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["wireless_adapter"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'HDMI út':
-		    			$specs["io"]["hdmi"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["hdmi"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["hdmi"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["hdmi"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'VGA':
-		    			$specs["io"]["vga"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["vga"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["vga"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["vga"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'DVI':
-		    			$specs["io"]["dvi"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["dvi"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["dvi"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["dvi"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'USB 2.0':
@@ -308,23 +377,51 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Bluetooth':
-		    			$specs["io"]["bluetooth"] = $elkoSpecs["key"][$i];
-		    			break;
-
-		    		case 'Bluetooth tækniupplýsingar':
-		    			$specs["io"]["bluetooth-version"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["bluetooth"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["bluetooth"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["bluetooth"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Thunderbolt':
-		    			$specs["io"]["thunderbolt"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["thunderbolt"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["thunderbolt"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["thunderbolt"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'MiniDisplay Port':
-		    			$specs["io"]["mini-displayport"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["mini_displayport"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["mini_displayport"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["mini_displayport"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Tengi fyrir heyrnartól/hljóðnema':
-		    			$specs["io"]["headphone-mic"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["io"]["headphone_mic"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["headphone_mic"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["headphone_mic"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Rafhlaða':
@@ -340,15 +437,31 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Geisladrif':
-		    			$specs["other"]["cd-drive"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["other"]["cd_drive"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["other"]["cd_drive"] = 0;
+		    			}
+		    			else{
+		    				$specs["other"]["cd_drive"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'CD/DVD/DVD+R/RW/BD':
-		    			$specs["other"]["cd-drive-type"] = $elkoSpecs["key"][$i];
+		    			$specs["other"]["cd_drive-type"] = $elkoSpecs["key"][$i];
 		    			break;
 
 		    		case 'Minniskortalesari':
-		    			$specs["other"]["card-reader"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'já') !== FALSE){
+		    				$specs["other"]["card_reader"] = 1;
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["other"]["card_reader"] = 0;
+		    			}
+		    			else{
+		    				$specs["other"]["card_reader"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Lyklaborð':
@@ -356,7 +469,7 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Íslenskir stafir á lyklaborði':
-		    			$specs["other"]["icelandic-letters"] = $elkoSpecs["key"][$i];
+		    			$specs["other"]["icelandic_letters"] = $elkoSpecs["key"][$i];
 		    			break;
 
 		    		case 'Forrit sem fylgja':
@@ -385,10 +498,13 @@ foreach ($separate_results as $separate_result) {
 		    }
 
 		    array_push($items["laptops"], $specs);
+		    //$itemNumber++;
     	}
     	
     }
-
+    /*if($itemNumber > 2){
+    	break;
+    }*/
     sleep(1);
 }
 
