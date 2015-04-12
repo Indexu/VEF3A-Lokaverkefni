@@ -47,7 +47,7 @@ class Autoloader implements IAutoloader {
 	/**
 	 * @var array
 	 */
-	private $resources = [];
+	private $resources = array();
 
 	/**
 	 * @var integer

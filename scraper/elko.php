@@ -112,10 +112,20 @@ foreach ($separate_results as $separate_result) {
         	// cURL it
         	$itemPage = curl($newUrl);
         	// Get price
-        	$itemPrice = scrape_between($itemPage, "itemprop=\"original-price\">", "</span>");
+        	$itemPrice = scrape_between($itemPage, "itemprop=\"discount-price\">", "</span>");
         	$itemPrice = str_replace("kr", "", $itemPrice);
         	$itemPrice = str_replace(".", "", $itemPrice);
-        	$specs["price"] = intval(trim($itemPrice));
+        	$itemPrice = intval(trim($itemPrice));
+
+        	if($itemPrice <= 0){
+        		$itemPrice = scrape_between($itemPage, "itemprop=\"original-price\">", "</span>");
+	        	$itemPrice = str_replace("kr", "", $itemPrice);
+	        	$itemPrice = str_replace(".", "", $itemPrice);
+	        	$itemPrice = intval(trim($itemPrice));
+        	}
+
+        	$itemPrice = number_format($itemPrice, 0, ',', '.');
+        	$specs["price"] = $itemPrice;
         	// Get area of scraping
         	$itemSpecs = scrape_between($itemPage, "<div id=\"specs\" class=\"tab-pane\">", "<div id=\"customer-overview\"");
         	// Explode area
@@ -175,7 +185,19 @@ foreach ($separate_results as $separate_result) {
 		    				$specs["cpu"]["id"] = $cpuSpecs[1];
 		    			}
 		    			else{
-		    				$specs["cpu"]["id"] = $elkoSpecs["key"][$i];
+		    				if(strpos($elkoSpecs["key"][$i], '-') !== FALSE){
+		    					$cpuSpecs = explode("-", $elkoSpecs["key"][$i]);
+
+		    					$specs["cpu"]["id"] = $cpuSpecs[1];
+		    				}
+		    				else if(strpos($elkoSpecs["key"][$i], ' ') !== FALSE){
+		    					$cpuSpecs = explode(" ", $elkoSpecs["key"][$i]);
+
+		    					$specs["cpu"]["id"] = $cpuSpecs[1];
+		    				}
+		    				else{
+		    					$specs["cpu"]["id"] = $elkoSpecs["key"][$i];
+		    				}
 		    			}
 		    			break;
 
@@ -192,7 +214,10 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Hraði örgjörva (GHz)':
-		    			$specs["cpu"]["clockspeed"] = $elkoSpecs["key"][$i];
+		    			$clockspeed = str_replace(" ","",$elkoSpecs["key"][$i]);
+		    			$clockspeed = str_replace(",",".",$clockspeed);
+
+		    			$specs["cpu"]["clockspeed"] = $clockspeed;
 		    			break;
 
 		    		case 'Hraði með Turbo Boost':
@@ -200,7 +225,12 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'CPU Cache':
-		    			$specs["cpu"]["cache"] = $elkoSpecs["key"][$i];
+		    			if(!empty($elkoSpecs["key"][$i])){
+		    				$specs["cpu"]["cache"] = $elkoSpecs["key"][$i][0];
+		    			}
+		    			else{
+		    				$specs["cpu"]["cache"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Gerð vinnsluminnis':
@@ -229,7 +259,24 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Gerð harðadisks':
-		    			$specs["storage"]["type"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), '8gb cache') !== FALSE){
+		    				$specs["storage"]["type"] = "SSHD";
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'sata') !== FALSE){
+		    				$specs["storage"]["type"] = "SATA";
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'sshd') !== FALSE){
+		    				$specs["storage"]["type"] = "SSHD";
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'ssd') !== FALSE){
+		    				$specs["storage"]["type"] = "SSD";
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'flash') !== FALSE){
+		    				$specs["storage"]["type"] = "Flash";
+		    			}
+		    			else{
+		    				$specs["storage"]["type"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Snúningshraði disks':
@@ -273,11 +320,8 @@ foreach ($separate_results as $separate_result) {
 		    			else if(strpos($elkoSpecs["key"][$i], 'VA') !== FALSE){
 		    				$specs["screen"]["type"] = "VA";
 		    			}
-		    			else if(strpos($elkoSpecs["key"][$i], 'Super AMOLED') !== FALSE){
-		    				$specs["screen"]["type"] = "Super AMOLED";
-		    			}
-		    			else if(strpos($elkoSpecs["key"][$i], 'AMOLED') !== FALSE){
-		    				$specs["screen"]["type"] = "AMOLED";
+		    			else if(strpos($elkoSpecs["key"][$i], 'LED') !== FALSE){
+		    				$specs["screen"]["type"] = "LED";
 		    			}
 		    			else{
 		    				$specs["screen"]["type"] = $elkoSpecs["key"][$i];
@@ -293,7 +337,10 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Upplausn':
-		    			$specs["screen"]["resolution"] = $elkoSpecs["key"][$i];
+		    			$resolution = str_replace(" ","",$elkoSpecs["key"][$i]);
+		    			$resolution = str_replace(",","x",$resolution);
+
+		    			$specs["screen"]["resolution"] = $resolution;
 		    			break;
 
 		    		case 'Snertiskjár':
@@ -313,7 +360,24 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Vefmyndavél - upplausn':
-		    			$specs["screen"]["webcam_resolution"] = $elkoSpecs["key"][$i];
+		    			if(strpos($elkoSpecs["key"][$i], '720') !== FALSE){
+		    				$specs["screen"]["webcam_resolution"] = "720p";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], '1080') !== FALSE){
+		    				$specs["screen"]["webcam_resolution"] = "1080p";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'IPS') !== FALSE){
+		    				$specs["screen"]["type"] = "IPS";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'VA') !== FALSE){
+		    				$specs["screen"]["type"] = "VA";
+		    			}
+		    			else if(strpos($elkoSpecs["key"][$i], 'LED') !== FALSE){
+		    				$specs["screen"]["type"] = "LED";
+		    			}
+		    			else{
+		    				$specs["screen"]["webcam_resolution"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Gerð netkorts':
@@ -369,7 +433,12 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'USB 2.0':
-		    			$specs["io"]["usb2"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'nei') !== FALSE){
+		    				$specs["io"]["usb2"] = 0;
+		    			}
+		    			else{
+		    				$specs["io"]["usb2"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'USB 3.0':
@@ -425,7 +494,15 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Rafhlaða':
-		    			$specs["battery"]["type"] = $elkoSpecs["key"][$i];
+		    			if(strpos(strtolower($elkoSpecs["key"][$i]), 'ion') !== FALSE){
+		    				$specs["battery"]["type"] = "lithium-ion";
+		    			}
+		    			else if(strpos(strtolower($elkoSpecs["key"][$i]), 'po') !== FALSE){
+		    				$specs["battery"]["type"] = "lithium-polymer";
+		    			}
+		    			else{
+		    				$specs["battery"]["type"] = $elkoSpecs["key"][$i];
+		    			}
 		    			break;
 
 		    		case 'Rafhlöðuending':
@@ -489,7 +566,13 @@ foreach ($separate_results as $separate_result) {
 		    			break;
 
 		    		case 'Þyngd (kg)':
-		    			$specs["appearance"]["weight"] = $elkoSpecs["key"][$i];
+		    			$weigth = trim($elkoSpecs["key"][$i]);
+
+		    			if($elkoSpecs["key"][$i]){
+		    				$weigth = str_replace(",", ".", $weigth);
+		    			}
+
+		    			$specs["appearance"]["weight"] = $weigth;
 		    			break;
 		    		
 		    		default:
@@ -498,7 +581,7 @@ foreach ($separate_results as $separate_result) {
 		    }
 
 		    array_push($items["laptops"], $specs);
-		    //$itemNumber++;
+		    $itemNumber++;
     	}
     	
     }
@@ -512,4 +595,4 @@ foreach ($separate_results as $separate_result) {
 print_r($items); // Printing out our array of URLs we've just scraped
 echo "</pre>";*/
 
-file_put_contents('../data/elko2.json', json_encode($items));
+file_put_contents('../data/elko.json', json_encode($items));

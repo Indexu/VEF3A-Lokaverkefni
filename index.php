@@ -23,8 +23,8 @@ try{
 }
 
 if (isset($_GET)){
-	if(isset($_GET['action'])){
-		$controller->{$_GET['action']}();
+	if(isset($_GET['filter'])){
+		$controller->filter();
 	}
 }
 
@@ -35,19 +35,14 @@ if (isset($_GET)){
 <head>
 	<meta charset="UTF-8">
 	<title>Ókeypis</title>
+	<link href='http://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/foundation.css" />
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/main.css" />
 	<script src="js/vendor/modernizr.js"></script>
 </head>
 
 <body>
-	<div class="row">
-		<div id="header" class="large-12 columns">
-			<?php $view->title(); ?>
-		</div>
-	</div>
-
-		
+	<?php $view->navbar(); ?>
 
 	<div id="wrapper" class="row">
 		<div class="large-12 columns">
