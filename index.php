@@ -11,13 +11,6 @@ try{
 	$controller = new Controller($model);
 	$view = new View($controller, $model);
 
-	// Register Dwoo namespace and register autoloader
-	/*$autoloader = new Dwoo\Autoloader();
-	$autoloader->add('Dwoo', 'libs/Dwoo');
-	$autoloader->register(true);
-
-	$dwoo = new Dwoo\Core();*/
-
 } catch(Exception $e){
 	die('Caught exception: '.  $e->getMessage(). "\n");
 }
@@ -38,7 +31,6 @@ if (isset($_GET)){
 	<link href='http://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/foundation.css" />
 	<link rel="stylesheet" href="css/main.css" />
-	<script src="js/vendor/modernizr.js"></script>
 </head>
 
 <body>

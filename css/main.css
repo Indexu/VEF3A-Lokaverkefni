@@ -12,8 +12,81 @@
 	display: block;
 }
 
+.catalogueRow{
+	display: table-row;
+}
+
 .catalogueEntry{
-	height: 15em;
+
+	position: relative;
+	overflow: visible;
+	margin-bottom: 2em;
+}
+
+.catalogueEntry:hover{
+	opacity: 0.9;
+}
+
+.cataItem{
+	color: rgb(10,10,10);
+	background-color: rgb(230,230,230);
+	border: 2px solid rgb(12, 136, 183);
+	border-radius: 0.2em;
+	height: 100%;
+	padding: 0 0 2.5em;
+	margin: 0;
+	
+}
+
+.cataItem img{
+	margin: auto;
+	position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    height: auto;
+    opacity: 0.2;
+}
+
+.cataItem h4, .cataItem ul{
+	z-index: 2;
+	position: relative;
+}
+
+.cataItem h4{
+	font-family: 'Amaranth';
+	text-align: center;
+	color: rgb(40,40,40);
+	border-bottom: 2px solid rgb(12, 136, 183);
+}
+
+.cataItem ul{
+	list-style-type: none;
+}
+
+.cataItemSpecTitle{
+	font-family: 'Amaranth';
+	background-color: rgb(12, 136, 183);
+	border-radius: 0 0.2em;
+	color: rgb(255,255,255);
+	padding: 0 0.3em;
+}
+
+.price{
+	text-align: center;
+	position: absolute;
+	font-family: 'Lobster';
+	color: rgb(255,255,255);
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 87%;
+	height: 17%;
+	border-top: 2px solid rgb(12, 136, 183);
+	background-color: rgb(12, 136, 183);
+	margin: 0 auto;
+}
+
+.price p{
+	margin-top: 0.2em;
 }
 
 .cataItemSpec{
@@ -55,6 +128,7 @@
 	text-align:center;
 	border: 2px solid rgb(12, 136, 183);
 	border-radius: 0.2em;
+	height: 65%;
 }
 
 .filterHeader{
@@ -160,4 +234,23 @@ input[type=checkbox]:checked + label:hover{
 
 #screen_res_output{
 	width: 3.2em;
+}
+
+#min_price, #max_price{
+	margin: 0 auto 1em auto;
+	text-align: left;
+}
+
+#min_price_output, #max_price_output{
+	width: 4em;
+	font-family: 'Amaranth', sans-serif;
+}
+
+.priceSubtitle{
+	font-family: 'Amaranth', sans-serif;
+	margin: -2.5em 0 0.5em 0;
+}
+
+.priceBox{
+	margin-top: 0;
 }

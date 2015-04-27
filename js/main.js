@@ -1,4 +1,4 @@
- $(document).foundation();
+$(document).foundation();
 
  var laptopCata = $('.catalogue');
 
@@ -219,8 +219,14 @@ $("#filterButton").click(function(){
     // Resolution
     filterString += "&screen_resolution=" + screen_res;
 
+    /* === Price === */
+    // Minimum
+    filterString += "&minPrice=" + $("#min_price").attr("data-slider");
+    // Maximum
+    filterString += "&maxPrice=" + $("#max_price").attr("data-slider");
+
     // Localhost
-	window.location.href = "http://localhost:1234/vef3a-lokaverkefni2/vef3a-lokaverkefni/" + filterString;
+	window.location.href = "http://localhost/vef3a-lokaverkefni/" + filterString;
 
 	//X.is
 	//window.location.href = "http://okeyp.is/vef3a/" + filterString;

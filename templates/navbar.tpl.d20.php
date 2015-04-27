@@ -4,7 +4,7 @@
   <ul class="title-area">
     <li class="name">
       <h1>
-        <a href="http://localhost:1234/vef3a-lokaverkefni2/vef3a-lokaverkefni/"><?php echo $this->scope["title"];?></a>
+        <a href="http://localhost/vef3a-lokaverkefni/"><?php echo $this->scope["title"];?></a>
       </h1>
     </li>
   </ul>

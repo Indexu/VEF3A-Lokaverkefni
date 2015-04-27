@@ -4,10 +4,10 @@
 <div id="filterBar" class="row indentBox">
 	<div class="large-12 columns">
 		<!-- Filter boxes -->
-		<div class="row">
+		<div class="row" data-equalizer>
 
 			<!-- CPU -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -91,7 +91,7 @@ else if (! (isset($this->scope["filters"]["cpu_clockspeed"]) ? $this->scope["fil
 			</div>
 
 			<!-- RAM -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -175,7 +175,7 @@ else if (! (isset($this->scope["filters"]["ram_size"]) ? $this->scope["filters"]
 			</div>
 
 			<!-- Storage -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -291,7 +291,7 @@ else if (! (isset($this->scope["filters"]["storage_size"]) ? $this->scope["filte
 			</div>
 
 			<!-- Screen -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -414,6 +414,57 @@ else if (! (isset($this->scope["filters"]["screen_resolution"]) ? $this->scope["
 			</div>
 
 		</div>
+
+		<!-- Price slider row -->
+		<div class="row">
+
+			<div class="large-12 columns">
+
+				<div class="filterBox priceBox">
+					<div class="row filterHeader">
+						<div class="large-12 columns">
+							<h3>Price</h3>
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="large-6 columns">
+							<p class="priceSubtitle">Min.</p>
+							<div id="min_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; <?php if ((isset($this->scope["filters"]["minPrice"]) ? $this->scope["filters"]["minPrice"]:null)) {
+?> initial: <?php echo $this->scope["filters"]["minPrice"];?>; <?php 
+}
+else if (! (isset($this->scope["filters"]["minPrice"]) ? $this->scope["filters"]["minPrice"]:null)) {
+?> initial: 0; <?php 
+}?> step: 1000; display_selector: #min_price_output;">
+								<span id="min_price_output" class="range-slider-handle" role="slider" tabindex="0"></span>
+								<span class="range-slider-active-segment"></span>
+							</div>
+						</div>
+
+						<div class="large-6 columns">
+							<p class="priceSubtitle">Max.</p>
+							<div id="max_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; <?php if ((isset($this->scope["filters"]["maxPrice"]) ? $this->scope["filters"]["maxPrice"]:null)) {
+?> initial: <?php echo $this->scope["filters"]["maxPrice"];?>; <?php 
+}
+else if (! (isset($this->scope["filters"]["maxPrice"]) ? $this->scope["filters"]["maxPrice"]:null)) {
+?> initial: 500000; <?php 
+}?> step: 1000; display_selector: #max_price_output;">
+								<span id="max_price_output" class="range-slider-handle" role="slider" tabindex="0"></span>
+								<span class="range-slider-active-segment"></span>
+							</div>
+						</div>
+					
+					</div>
+
+					
+
+				</div>
+				
+			</div>
+			
+		</div>
+
 		<!-- Filter Button row -->
 		<div class="row">
 			<div class="large-12 columns">
@@ -443,6 +494,8 @@ else if (! (isset($this->scope["filters"]["screen_resolution"]) ? $this->scope["
 </div>
 
 <div class='row catalogue'>
+
+<?php $this->scope["counter"]=0?>
 <?php 
 $_fh2_data = (isset($this->scope["laptops"]) ? $this->scope["laptops"] : null);
 if ($this->isTraversable($_fh2_data) == true)
@@ -452,23 +505,73 @@ if ($this->isTraversable($_fh2_data) == true)
 /* -- foreach start output */
 ?>
 
-	<a href="<?php echo $this->scope["value"]["url"];?>" class='large-3 columns catalogueEntry panel'>
-		<h4 class='cataItemName'><?php echo $this->scope["value"]["name"];?></h4>
-		<ul class='cataItemSpec'>
-			<li>OS: <span class="os"><?php echo $this->scope["value"]["os"];?></span></li>
-			<li>CPU: <?php echo $this->scope["value"]["cpu"]["type"];?> <?php echo $this->scope["value"]["cpu"]["family"];?> @ <span class="cpuspeed"><?php echo $this->scope["value"]["cpu"]["clockspeed"];?></span>GHz</li>
-			<li>RAM: <span class="ramsize"><?php echo $this->scope["value"]["ram"]["size"];?></span>GB <?php echo $this->scope["value"]["ram"]["type"];?> @ <?php echo $this->scope["value"]["ram"]["clockspeed"];?>MHz</li>
-			<li>Storage: <?php echo $this->scope["value"]["storage"]["size"];
-echo $this->scope["value"]["storage"]["ssd_size"];?> GB <?php echo $this->scope["value"]["storage"]["type"];?></li>
-			<li>Screen: <span class="screenSize"><?php echo $this->scope["value"]["screen"]["size"];?></span>" @ <?php echo $this->scope["value"]["screen"]["resolution"];?></li>
-			<li>Price: <span class="price"><?php echo $this->scope["value"]["price"];?></span></li>
-		</ul>
-	</a>
+	<?php if ((isset($this->scope["counter"]) ? $this->scope["counter"] : null)%4 == 0) {
+?>
+		<?php if ((isset($this->scope["counter"]) ? $this->scope["counter"] : null) != 0) {
+?>
+			</div>
+		<?php 
+}?>
+		<div class='row catalogueRow' data-equalizer>
+	<?php 
+}?>
 
+	<a href="<?php echo $this->scope["value"]["url"];?>" class='large-3 columns catalogueEntry' data-equalizer-watch>
+		<div class="cataItem">
+			<h4 class='cataItemName'><?php echo $this->scope["value"]["name"];?></h4>
+			<ul class='cataItemSpec'>
+				<li><span class="cataItemSpecTitle">OS</span> <span class="os"><?php echo $this->scope["value"]["os"];?></span></li>
+				<li><span class="cataItemSpecTitle">CPU</span> <?php echo $this->scope["value"]["cpu"]["type"];?> <?php echo $this->scope["value"]["cpu"]["family"];?> @ <span class="cpuspeed"><?php echo $this->scope["value"]["cpu"]["clockspeed"];?></span>GHz</li>
+				<li><span class="cataItemSpecTitle">RAM</span> <span class="ramsize"><?php echo $this->scope["value"]["ram"]["size"];?></span>GB <?php echo $this->scope["value"]["ram"]["type"];?> @ <?php echo $this->scope["value"]["ram"]["clockspeed"];?>MHz</li>
+				<li><span class="cataItemSpecTitle">Storage</span> <?php echo $this->scope["value"]["storage"]["size"];
+echo $this->scope["value"]["storage"]["ssd_size"];?> GB <?php echo $this->scope["value"]["storage"]["type"];?></li>
+				<li><span class="cataItemSpecTitle">Screen</span> <span class="screenSize"><?php echo $this->scope["value"]["screen"]["size"];?></span>" @ <?php echo $this->scope["value"]["screen"]["resolution"];?></li>
+					
+			</ul>
+
+			<div class="price">
+				<p><?php echo $this->scope["value"]["price"];?> kr.</p>
+			</div>
+
+			<img src="img/elko.png">
+		</div>
+		
+	</a>
+	
+
+  	
+
+  	
+
+  	
+
+  	<!--<a href="<?php echo $this->scope["value"]["url"];?>" class='large-3 columns catalogueEntry' data-equalizer-watch>
+		<div class="testing">
+			<h4 class='cataItemName'><?php echo $this->scope["value"]["name"];?></h4>
+			<ul class='cataItemSpec'>
+				<li>OS: <span class="os"><?php echo $this->scope["value"]["os"];?></span></li>
+				<li>CPU: <?php echo $this->scope["value"]["cpu"]["type"];?> <?php echo $this->scope["value"]["cpu"]["family"];?> @ <span class="cpuspeed"><?php echo $this->scope["value"]["cpu"]["clockspeed"];?></span>GHz</li>
+				<li>RAM: <span class="ramsize"><?php echo $this->scope["value"]["ram"]["size"];?></span>GB <?php echo $this->scope["value"]["ram"]["type"];?> @ <?php echo $this->scope["value"]["ram"]["clockspeed"];?>MHz</li>
+				<li>Storage: <?php echo $this->scope["value"]["storage"]["size"];
+echo $this->scope["value"]["storage"]["ssd_size"];?> GB <?php echo $this->scope["value"]["storage"]["type"];?></li>
+				<li>Screen: <span class="screenSize"><?php echo $this->scope["value"]["screen"]["size"];?></span>" @ <?php echo $this->scope["value"]["screen"]["resolution"];?></li>
+				
+			</ul>
+			<div class="price">
+				<p><?php echo $this->scope["value"]["price"];?></p>
+			</div>
+		</div>
+		
+	</a> -->
+
+	
+	
+	<?php $this->scope["counter"]=(isset($this->scope["counter"]) ? $this->scope["counter"] : null)+1?>
 <?php 
 /* -- foreach end output */
 	}
 }?>
+</div>
 </div><?php  /* end template body */
 return $this->buffer . ob_get_clean();
 ?>

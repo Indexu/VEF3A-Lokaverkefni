@@ -60,8 +60,6 @@ class Controller {
 						else if($filterName[0] == "screen" && $filterName[1] == "resolution"){
 							foreach ($this->model->items["laptops"] as $laptopNumber => $laptopSpecs) {
 								if($filterValue >= "20"){
-									/*echo "Checking if " . $laptopSpecs[$filterName[0]][$filterName[1]] . " is in:";
-									print_r($this->model->resolution_blacklist[0]);*/
 									if(in_array($laptopSpecs[$filterName[0]][$filterName[1]], $this->model->resolution_blacklist[0])){
 										unset($this->model->items["laptops"][$laptopNumber]);
 										continue;
@@ -96,41 +94,6 @@ class Controller {
 									}
 								}
 
-
-								/*switch ($filterValue) {
-									case "20":
-										if(in_array($laptopSpecs[$filterName[0]][$filterName[1]], $this->model->resolution_blacklist[0])){
-											unset($this->model->items["laptops"][$laptopNumber]);
-										}
-										break;
-
-									case "30":
-										if($laptopSpecs[$filterName[0]][$filterName[1]] < 15){
-											unset($this->model->items["laptops"][$laptopNumber]);
-										}
-										break;
-
-									case "40":
-										if($laptopSpecs[$filterName[0]][$filterName[1]] < 17){
-											unset($this->model->items["laptops"][$laptopNumber]);
-										}
-										break;
-
-									case "50":
-										if($laptopSpecs[$filterName[0]][$filterName[1]] < 17){
-											unset($this->model->items["laptops"][$laptopNumber]);
-										}
-										break;
-
-									case "60":
-										if($laptopSpecs[$filterName[0]][$filterName[1]] < 17){
-											unset($this->model->items["laptops"][$laptopNumber]);
-										}
-										break;
-									
-									default:
-										break;
-								}*/
 							}
 						}
 						// True/false check
@@ -151,12 +114,31 @@ class Controller {
 						}
 					}
 					else{
-						foreach ($this->model->items["laptops"] as $laptopNumber => $laptopSpecs) {
+						if($filterName[0] == "maxPrice"){
+							foreach ($this->model->items["laptops"] as $laptopNumber => $laptopSpecs) {
 							
-							if(strtolower($laptopSpecs[$filterName[0]]) != $filterValue){
-								unset($this->model->items["laptops"][$laptopNumber]);
+								if(strtolower(str_replace(".", "", $laptopSpecs["price"])) > $filterValue){
+									unset($this->model->items["laptops"][$laptopNumber]);
+								}
 							}
 						}
+						else if($filterName[0] == "minPrice"){
+							foreach ($this->model->items["laptops"] as $laptopNumber => $laptopSpecs) {
+							
+								if(strtolower(str_replace(".", "", $laptopSpecs["price"])) < $filterValue){
+									unset($this->model->items["laptops"][$laptopNumber]);
+								}
+							}
+						}
+						else{
+							foreach ($this->model->items["laptops"] as $laptopNumber => $laptopSpecs) {
+							
+								if(strtolower($laptopSpecs[$filterName[0]]) != $filterValue){
+									unset($this->model->items["laptops"][$laptopNumber]);
+								}
+							}
+						}
+						
 					}
 				}
 			}

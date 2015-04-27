@@ -2,10 +2,10 @@
 <div id="filterBar" class="row indentBox">
 	<div class="large-12 columns">
 		<!-- Filter boxes -->
-		<div class="row">
+		<div class="row" data-equalizer>
 
 			<!-- CPU -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -64,7 +64,7 @@
 			</div>
 
 			<!-- RAM -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -123,7 +123,7 @@
 			</div>
 
 			<!-- Storage -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -203,7 +203,7 @@
 			</div>
 
 			<!-- Screen -->
-			<div class="large-3 columns">
+			<div class="large-3 columns" data-equalizer-watch>
 				<div class="filterBox">
 					<!-- Filter box header -->
 					<div class="row filterHeader">
@@ -290,6 +290,47 @@
 			</div>
 
 		</div>
+
+		<!-- Price slider row -->
+		<div class="row">
+
+			<div class="large-12 columns">
+
+				<div class="filterBox priceBox">
+					<div class="row filterHeader">
+						<div class="large-12 columns">
+							<h3>Price</h3>
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="large-6 columns">
+							<p class="priceSubtitle">Min.</p>
+							<div id="min_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; {if $filters.minPrice} initial: {$filters.minPrice}; {elseif !$filters.minPrice} initial: 0; {/if} step: 1000; display_selector: #min_price_output;">
+								<span id="min_price_output" class="range-slider-handle" role="slider" tabindex="0"></span>
+								<span class="range-slider-active-segment"></span>
+							</div>
+						</div>
+
+						<div class="large-6 columns">
+							<p class="priceSubtitle">Max.</p>
+							<div id="max_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; {if $filters.maxPrice} initial: {$filters.maxPrice}; {elseif !$filters.maxPrice} initial: 500000; {/if} step: 1000; display_selector: #max_price_output;">
+								<span id="max_price_output" class="range-slider-handle" role="slider" tabindex="0"></span>
+								<span class="range-slider-active-segment"></span>
+							</div>
+						</div>
+					
+					</div>
+
+					
+
+				</div>
+				
+			</div>
+			
+		</div>
+
 		<!-- Filter Button row -->
 		<div class="row">
 			<div class="large-12 columns">
@@ -319,19 +360,66 @@
 </div>
 
 <div class='row catalogue'>
+
+{$counter = 0}
 {foreach $laptops, key, value, name='default'}
 
-	<a href="{$value.url}" class='large-3 columns catalogueEntry panel'>
-		<h4 class='cataItemName'>{$value.name}</h4>
-		<ul class='cataItemSpec'>
-			<li>OS: <span class="os">{$value.os}</span></li>
-			<li>CPU: {$value.cpu.type} {$value.cpu.family} @ <span class="cpuspeed">{$value.cpu.clockspeed}</span>GHz</li>
-			<li>RAM: <span class="ramsize">{$value.ram.size}</span>GB {$value.ram.type} @ {$value.ram.clockspeed}MHz</li>
-			<li>Storage: {$value.storage.size}{$value.storage.ssd_size} GB {$value.storage.type}</li>
-			<li>Screen: <span class="screenSize">{$value.screen.size}</span>" @ {$value.screen.resolution}</li>
-			<li>Price: <span class="price">{$value.price}</span></li>
-		</ul>
-	</a>
+	{if $counter % 4 == 0}
+		{if $counter != 0}
+			</div>
+		{/if}
+		<div class='row catalogueRow' data-equalizer>
+	{/if}
 
+	<a href="{$value.url}" class='large-3 columns catalogueEntry' data-equalizer-watch>
+		<div class="cataItem">
+			<h4 class='cataItemName'>{$value.name}</h4>
+			<ul class='cataItemSpec'>
+				<li><span class="cataItemSpecTitle">OS</span> <span class="os">{$value.os}</span></li>
+				<li><span class="cataItemSpecTitle">CPU</span> {$value.cpu.type} {$value.cpu.family} @ <span class="cpuspeed">{$value.cpu.clockspeed}</span>GHz</li>
+				<li><span class="cataItemSpecTitle">RAM</span> <span class="ramsize">{$value.ram.size}</span>GB {$value.ram.type} @ {$value.ram.clockspeed}MHz</li>
+				<li><span class="cataItemSpecTitle">Storage</span> {$value.storage.size}{$value.storage.ssd_size} GB {$value.storage.type}</li>
+				<li><span class="cataItemSpecTitle">Screen</span> <span class="screenSize">{$value.screen.size}</span>" @ {$value.screen.resolution}</li>
+					
+			</ul>
+
+			<div class="price">
+				<p>{$value.price} kr.</p>
+			</div>
+
+			<img src="img/elko.png">
+		</div>
+		
+	</a>
+	
+
+  	
+
+  	
+
+  	
+
+  	<!--<a href="{$value.url}" class='large-3 columns catalogueEntry' data-equalizer-watch>
+		<div class="testing">
+			<h4 class='cataItemName'>{$value.name}</h4>
+			<ul class='cataItemSpec'>
+				<li>OS: <span class="os">{$value.os}</span></li>
+				<li>CPU: {$value.cpu.type} {$value.cpu.family} @ <span class="cpuspeed">{$value.cpu.clockspeed}</span>GHz</li>
+				<li>RAM: <span class="ramsize">{$value.ram.size}</span>GB {$value.ram.type} @ {$value.ram.clockspeed}MHz</li>
+				<li>Storage: {$value.storage.size}{$value.storage.ssd_size} GB {$value.storage.type}</li>
+				<li>Screen: <span class="screenSize">{$value.screen.size}</span>" @ {$value.screen.resolution}</li>
+				
+			</ul>
+			<div class="price">
+				<p>{$value.price}</p>
+			</div>
+		</div>
+		
+	</a> -->
+
+	
+	
+	{$counter = $counter + 1}
 {/foreach}
+</div>
 </div>

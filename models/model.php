@@ -23,6 +23,7 @@ class Model {
 		$this->resolution_blacklist[0][0] = "1366x768";
 		$this->resolution_blacklist[0][1] = "1440x900";
 		$this->resolution_blacklist[0][2] = "1600x900";
+		$this->resolution_blacklist[0][3] = "1280x800";
 		$this->resolution_blacklist[1][0] = "1920x1080";
 		$this->resolution_blacklist[2][0] = "2560x1600";
 		$this->resolution_blacklist[2][1] = "2880x1800";
