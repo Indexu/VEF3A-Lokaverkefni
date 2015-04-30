@@ -5,16 +5,18 @@ class Model {
 	public $specs = array();
 	public $resolution_blacklist = array();
 	public $tite;
+	public $root;
 	
 	public function __construct(){
 		
 		$this->title = "Ókeypis";
+		$this->root = $_SERVER["DOCUMENT_ROOT"] . "/vef3a-lokaverkefni/";
 		
 		try{
-			$elkojson = file_get_contents('data/elko.json');
+			$elkojson = file_get_contents($this->root . 'data/elko.json');
 			$this->items = json_decode($elkojson, true);
 
-			$spec_sheet_json = file_get_contents('data/spec_sheet.json');
+			$spec_sheet_json = file_get_contents($this->root . 'data/spec_sheet.json');
 			$this->specs = json_decode($spec_sheet_json, true);
 		} catch(Exception $e){
 			 die('Caught exception: '.  $e->getMessage(). "\n");

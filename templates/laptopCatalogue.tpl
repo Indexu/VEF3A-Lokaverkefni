@@ -108,7 +108,7 @@
 								</div>
 								<!-- Slider -->
 								<div class="large-9 columns">
-									<div id="ram_size" class="range-slider radius" data-slider data-options="start: 2; end: 16; {if $filters.ram_size} initial: {replace $filters.ram_size "." ""}; {elseif !$filters.ram_size} initial: 2; {/if} display_selector: #ram_gb_output;">
+									<div id="ram_size" class="range-slider radius" data-slider data-options="start: 2; end: 16; {if $filters.ram_size} initial: {replace $filters.ram_size "." ""}; {elseif !$filters.ram_size} initial: 2; {/if} step: 2; display_selector: #ram_gb_output;">
 								      	<span id="ram_gb_output" class="range-slider-handle" role="slider" tabindex="0"></span>
 								      	<span class="range-slider-active-segment"></span>
 							    	</div>
@@ -307,7 +307,7 @@
 
 						<div class="large-6 columns">
 							<p class="priceSubtitle">Min.</p>
-							<div id="min_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; {if $filters.minPrice} initial: {$filters.minPrice}; {elseif !$filters.minPrice} initial: 0; {/if} step: 1000; display_selector: #min_price_output;">
+							<div id="min_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; {if $filters.minPrice} initial: {$filters.minPrice}; {elseif !$filters.minPrice} initial: 0; {/if} step: 10000; display_selector: #min_price_output;">
 								<span id="min_price_output" class="range-slider-handle" role="slider" tabindex="0"></span>
 								<span class="range-slider-active-segment"></span>
 							</div>
@@ -315,7 +315,7 @@
 
 						<div class="large-6 columns">
 							<p class="priceSubtitle">Max.</p>
-							<div id="max_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; {if $filters.maxPrice} initial: {$filters.maxPrice}; {elseif !$filters.maxPrice} initial: 500000; {/if} step: 1000; display_selector: #max_price_output;">
+							<div id="max_price" class="range-slider radius" data-slider data-options="start: 0; end: 500000; {if $filters.maxPrice} initial: {$filters.maxPrice}; {elseif !$filters.maxPrice} initial: 500000; {/if} step: 10000; display_selector: #max_price_output;">
 								<span id="max_price_output" class="range-slider-handle" role="slider" tabindex="0"></span>
 								<span class="range-slider-active-segment"></span>
 							</div>

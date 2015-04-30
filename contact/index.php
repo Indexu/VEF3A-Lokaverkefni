@@ -1,10 +1,10 @@
 <?php
 
-require('models/model.php');
-require('views/view.php');
-require('controllers/controller.php');
+require('../models/model.php');
+require('../views/view.php');
+require('../controllers/controller.php');
 
-require 'libs/Dwoo/Autoloader.php';
+require '../libs/Dwoo/Autoloader.php';
 
 try{
 	$model = new Model;
@@ -15,12 +15,6 @@ try{
 	die('Caught exception: '.  $e->getMessage(). "\n");
 }
 
-if (isset($_GET)){
-	if(isset($_GET['filter'])){
-		$controller->filter();
-	}
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -29,8 +23,8 @@ if (isset($_GET)){
 	<meta charset="UTF-8">
 	<title>Ókeypis</title>
 	<link href='http://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="css/foundation.css" />
-	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="../css/foundation.css" />
+	<link rel="stylesheet" href="../css/main.css" />
 </head>
 
 <body>
@@ -40,7 +34,7 @@ if (isset($_GET)){
 		<div class="row">
 			<div class="large-12 columns">
 				<?php
-					$view->laptopCatalogue();
+					$view->contactPage();
 				?>
 			</div>
 
@@ -52,10 +46,10 @@ if (isset($_GET)){
 
 	<?php $view->footer(); ?>
 
-	<script src="js/vendor/jquery.js"></script>
-    <script src="js/foundation.min.js"></script>
-    <script src="js/isotope.pkgd.min.js"></script>
-    <script src="js/main.js"></script>
+	<script src="../js/vendor/jquery.js"></script>
+    <script src="../js/foundation.min.js"></script>
+    <script src="../js/isotope.pkgd.min.js"></script>
+    <script src="../js/main.js"></script>
 
 </body>
 

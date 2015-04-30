@@ -1,6 +1,30 @@
+* {
+	margin: 0;
+}
+
 @font-face {
     font-family: 'Lobster';
     src: url(../fonts/Lobster1.4.otf);
+}
+
+html, body{
+	height: 100%;
+}
+
+body{
+	background-image: url("../img/diamond_upholstery.png");
+	background-repeat: repeat;
+}
+
+#wrapper{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -4em;
+}
+
+h2{
+	font-family: 'Lobster';
 }
 
 .title-area h1{
@@ -253,4 +277,23 @@ input[type=checkbox]:checked + label:hover{
 
 .priceBox{
 	margin-top: 0;
+}
+
+.footer, .push{
+	height: 4em;
+	clear: both;
+}
+
+.footer{
+	background-color: #333;
+	text-align: center;
+}
+
+.footer .row{
+	padding: 1.4em 0 0 0;
+}
+
+.footer a{
+	color: rgb(255,255,255);
+	font-family: 'Amaranth';
 }
