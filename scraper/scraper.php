@@ -1,4 +1,5 @@
 <?php
+    // SOURCE: http://www.jacobward.co.uk/web-scraping-with-php-curl-part-1/
     ini_set('max_execution_time', 3000);
     // Defining the basic cURL function
     function curl($url) {

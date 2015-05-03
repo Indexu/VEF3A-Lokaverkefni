@@ -229,5 +229,5 @@ $("#filterButton").click(function(){
 	window.location.href = "http://localhost/vef3a-lokaverkefni/" + filterString;
 
 	//X.is
-	//window.location.href = "http://okeyp.is/vef3a/" + filterString;
+	//window.location.href = "http://www.okeyp.is/vef3a/" + filterString;
 });

@@ -15,6 +15,9 @@ class View {
 		$autoloader->register(true);
 
 		$this->dwoo = new Dwoo\Core();
+
+		$this->dwoo->setCompileDir($this->model->root . 'templates/');
+		$this->dwoo->setTemplateDir($this->model->root . 'templates/');
 	}
 	
 	public function navbar(){
